@@ -10,6 +10,10 @@ let initWebRoutes = (app) => {
     });
     router.get('/getCRUD', homeController.getCRUD);
     router.post('/postCRUD', homeController.postCRUD);
+    router.post('/postCRUD', homeController.postCRUD);
+    router.get('/readCRUD', homeController.readCRUD);
+
+
 
     return app.use("/", router); // app phải dùng tất cả các file route được khai báo
 }
