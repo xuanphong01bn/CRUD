@@ -14,6 +14,9 @@ let initWebRoutes = (app) => {
     router.get('/readCRUD', homeController.readCRUD);
 
     router.get('/api/get-all-users', userController.handleGetAllUsers);
+    router.post('/api/create-new-user', userController.handleCreateNewUser);
+
+
 
 
 
