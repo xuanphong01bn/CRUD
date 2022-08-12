@@ -9,14 +9,21 @@ let handleGetAllUsers = async (req, res) => {
             users: []
         })
     }
-    else {
-        let users = await userService.getAllUsers(id)
+    let users = await userService.getAllUsers(id)
+    if (!users) {
+        return res.status(200).json({
+            errCode: 2,
+            errMessage: 'User does not exist',
+            users
+        })
+    }
+    else
         return res.status(200).json({
             errCode: 0,
             errMessage: 'OK',
             users
         })
-    }
+
 
 }
 let handleCreateNewUser = async (req, res) => {

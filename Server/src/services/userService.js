@@ -5,23 +5,36 @@ const salt = bcrypt.genSaltSync(10); // muối = công thức để hash
 let getAllUsers = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let users = 'abc'
-            if (userId === 'ALL') {
-                users = await db.User.findAll({
-                    attributes: {
-                        exclude: ['password']
-                    }
+            let user = db.User.findOne({
+                where: { id: userId }
+            })
+            if (!user) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'User does not exist',
                 })
             }
-            if (userId && userId !== 'ALL') {
-                users = await db.User.findOne({
-                    where: { id: userId },
-                    attributes: {
-                        exclude: ['password']
-                    }
-                })
+            else {
+                let users = 'abc'
+                if (userId === 'ALL') {
+                    users = await db.User.findAll({
+                        attributes: {
+                            exclude: ['password']
+                        }
+                    })
+                }
+                if (userId && userId !== 'ALL') {
+                    users = await db.User.findOne({
+                        where: { id: userId },
+                        attributes: {
+                            exclude: ['password']
+                        }
+                    })
+                }
+                resolve(users)
             }
-            resolve(users)
+
+
         } catch (e) {
             reject(e)
         }
