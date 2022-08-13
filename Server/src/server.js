@@ -5,12 +5,15 @@ import viewEngine from './config/viewEngine';
 import initWebRoutes from './route/web.js';
 import testConnectDB from './config/ConnectDB'
 require('dotenv').config();// gọi hàm config của .env, chạy hàm process ở dưới
-
+const cors = require('cors');
 let app = express();
 
+app.use(cors({ credentials: true, origin: true }));
 // config app
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
+
 
 viewEngine(app);
 initWebRoutes(app);
