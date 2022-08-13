@@ -17,7 +17,7 @@ class ModalUser extends React.Component {
     }
     toggle = () => {
         // alert('me toggle')
-        this.props.toggleFromParent()
+        this.props.toggleAddNew()
     }
     // toggle: nút đóng, mở
     handleOnchaneInput = (event, id) => {
@@ -48,7 +48,7 @@ class ModalUser extends React.Component {
         let isValid = this.checkValideInput();
         if (isValid === true) {
             //call API
-            this.props.createNewUser(this.state);
+            this.props.createNewUser(this.state)
         }
         // console.log('>>> data modal', this.state)
         this.setState({
@@ -58,10 +58,11 @@ class ModalUser extends React.Component {
             email: '',
             address: '',
         })
+        this.toggle();
     }
     render() {
 
-        // console.log('>>> check child props', this.props);
+        console.log('>>> check child props', this.props);
         // console.log('>>> check child open modal', this.props.isOpen);
         return (
             <div>
@@ -77,7 +78,7 @@ class ModalUser extends React.Component {
                         <div className="container">
                             <div className="row">
                                 <div className="col-6 ">
-                                    <label>Tên</label>
+                                    <label>Username</label>
                                     <div ><input type="text" style={{ width: '100%' }}
                                         onChange={(event) => this.handleOnchaneInput(event, "username")}
                                         value={this.state.username}
@@ -94,7 +95,7 @@ class ModalUser extends React.Component {
                             </div>
                             <div className="row">
                                 <div className="col-6 ">
-                                    <label>SĐT</label>
+                                    <label>Telephone</label>
                                     <div><input type="text" style={{ width: '100%' }}
                                         onChange={(event) => this.handleOnchaneInput(event, "telephone")}
                                         value={this.state.telephone}
@@ -102,7 +103,7 @@ class ModalUser extends React.Component {
 
                                 </div>
                                 <div className="col-6 ">
-                                    <label>Địa chỉ</label>
+                                    <label>Address</label>
                                     <div><input type="text" style={{ width: '100%' }}
                                         onChange={(event) => this.handleOnchaneInput(event, "address")}
                                         value={this.state.address}

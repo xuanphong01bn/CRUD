@@ -12,7 +12,7 @@ import ModalUser from "./ModalUser";
 import { toast } from "react-toastify";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ModalEdit from "./ModalEdit";
-import { getAllUsers } from "../../services/userService";
+import { getAllUsers, addNewUser, editUserService, deleteUserService } from "../../services/userService";
 class Users extends React.Component {
     constructor(props) {
         super(props);
@@ -20,17 +20,90 @@ class Users extends React.Component {
             listUser: [],
             isOpenModalUser: false,
             isOpenModalEdit: false,
-            UserEdit: '',
+            userEdit: '',
         }
     }
     async componentDidMount() {
         let res = await getAllUsers('ALL');
-        console.log('check res : ', res)
+        console.log('check res : ', res.data.users)
+        this.setState({
+            listUser: res.data.users,
+        })
+        console.log("check list User :", this.state.listUser)
     }
+    // Get all user 
+    getAllUserFromReact = async () => {
+        let res = await getAllUsers('ALL');
+        console.log('check res : ', res.data.users)
+        this.setState({
+            listUser: res.data.users,
+        })
+        console.log("check list User :", this.state.listUser)
+    }
+    // Thêm User
+    handleAddNewUser = () => {
+        this.setState({
+            isOpenModalUser: true,
+        })
+        console.log(this.state.isOpenModalUser)
+    }
+    toggleAddNew = () => {
+        this.setState({
+            isOpenModalUser: false,
+        })
+    }
+    createNewUser = async (data) => {
+        console.log('check data >>>: ', data);
+        await addNewUser(data)
+        this.getAllUserFromReact();
+    }
+    // Sửa User
+    handleEditUser = (item) => {
+        console.log("item : >>> ", item)
+        this.setState({
+            isOpenModalEdit: true,
+            userEdit: item,
+        })
+    }
+    toggleEdit = () => {
+        this.setState({
+            isOpenModalEdit: false,
+        })
+    }
+    editUser = async (data) => {
+        console.log('data edit la: ', data)
+        await editUserService(data);
+        this.getAllUserFromReact();
+
+    }
+    // Xoá User
+    deleteUser = async (data) => {
+        console.log(data.id)
+
+        await deleteUserService(data.id)
+        this.getAllUserFromReact();
+    }
+
     render() {
-        let { listUser } = this.state;
+        let { listUser, isOpenModalUser, isOpenModalEdit, userEdit } = this.state;
         return (
             <div className="content">
+                <ModalUser
+                    isOpen={isOpenModalUser}
+                    test={'abc'}
+                    toggleAddNew={this.toggleAddNew}
+                    createNewUser={this.createNewUser}
+                />
+                {isOpenModalEdit && <ModalEdit
+                    isOpen={isOpenModalEdit}
+                    test={'abc'}
+                    user={userEdit}
+                    toggleEdit={this.toggleEdit}
+                    editUser={this.editUser}
+                />
+
+                    // createNewUser={this.createNewUser}
+                }
                 <div className="page-title">Danh sách người dùng</div>
                 <div className="container-fluid table">
                     <div className="btn-add" style={{ float: 'left' }}>
@@ -39,46 +112,6 @@ class Users extends React.Component {
                         >Thêm mới</div>
                     </div>
                     <div> </div>
-
-                    {/* <div className="page-content">
-                        <div className="row title ">
-                            <span className="col-1 th">STT</span>
-                            <span className="col-1 th">UserID</span>
-                            <span className="col-1 th">Tên</span>
-                            <span className="col-2 th">SĐT</span>
-                            <span className="col-3 th">Email</span>
-                            <span className="col-2 th">Địa chỉ</span>
-                            <span className="col-2 th">Thao tác</span>
-                        </div>
-                        <div className="row detail-user">
-                            {listUser && listUser.length > 0 &&
-                                listUser.map((item, index) => {
-                                    return (
-                                        <>
-                                            <div className="col-1 text ">{index + 1}</div>
-                                            <div className="col-1 text ">{item.id} </div>
-                                            <div className="col-1 text ">{item.username} </div>
-                                            <div className="col-2 text ">{item.telephone}</div>
-                                            <div className="col-3 text ">{item.email}</div>
-                                            <div className="col-2 text">
-                                                {item.address}
-                                            </div>
-                                            <div className="col-2">
-                                                <span><button className="btn-primary edit" onClick={() => this.handleEditUser(item)} ><FontAwesomeIcon icon={faPenToSquare} /></button></span>
-                                                <span>
-                                                    <button className="btn-danger" onClick={() => this.handleDeleteUser(item)}><FontAwesomeIcon icon={faTrashCan} /></button>
-
-                                                </span>
-                                            </div>
-                                        </>
-
-
-                                    )
-
-                                })}
-
-                        </div>
-                    </div> */}
                     <div className="table-content">
                         <table>
                             <tr>
@@ -90,14 +123,31 @@ class Users extends React.Component {
                                 <th>Action</th>
 
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
+                            {listUser && listUser.length > 0 && listUser.map((item, index) => {
+                                return (
+                                    <tr>
+                                        <td>{index + 1}</td>
+                                        <td>{item.username}</td>
+                                        <td>{item.email}</td>
+                                        <td>{item.address}</td>
+                                        <td>{item.telephone}</td>
+                                        <td>
+                                            <div className="btn btn-warning" style={{ margin: '0 3px' }}
+                                                onClick={() => this.handleEditUser(item)}
+                                            >Sửa</div>
+                                            <div className="btn btn-danger"
+                                                onClick={() => this.deleteUser(item)}
+                                            >Xoá</div>
+
+
+                                        </td>
+                                    </tr>
+                                )
+
+                            })
+
+                            }
+
                         </table>
                     </div>
                 </div>

@@ -15,9 +15,10 @@ class ModalEdit extends React.Component {
     }
     componentDidMount() {
         console.log('Did mout ne') // ko mout thì bản chất cái modal này nó đã mout ở bên cha rồi nên ko thể mout lại nữa
-        let user = this.props.UserEdit;
+        let user = this.props.user;
         // console.log('User cần sửa là : ', user);
         this.setState({
+            id: user.id,
             username: user.username,
             password: user.password,
             telephone: user.telephone,
@@ -29,7 +30,7 @@ class ModalEdit extends React.Component {
 
     toggle = () => {
         // alert('me toggle')
-        this.props.toggleFromParent()
+        this.props.toggleEdit()
     }
     handleOnchaneInput = (event, id) => {
         let copyState = { ...this.state };
@@ -60,18 +61,19 @@ class ModalEdit extends React.Component {
             let isValid = this.checkValideInput();
             if (isValid === true) {
                 //call API
-                this.props.editUser(this.state, user.id);
+                this.props.editUser(this.state);
             }
             toast.success('Sửa thành công')
         } catch (e) {
             console.log(e)
             toast.error('Lỗi')
         }
+        this.toggle();
 
 
     }
     render() {
-        let user = this.props.UserEdit;
+        let user = this.props.user;
         console.log('User cần sửa là : ', user);
         return (
             <div>
