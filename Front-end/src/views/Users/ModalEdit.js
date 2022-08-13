@@ -62,13 +62,15 @@ class ModalEdit extends React.Component {
             if (isValid === true) {
                 //call API
                 this.props.editUser(this.state);
+                this.toggle();
             }
             toast.success('Sửa thành công')
+
         } catch (e) {
             console.log(e)
             toast.error('Lỗi')
         }
-        this.toggle();
+
 
 
     }
